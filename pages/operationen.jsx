@@ -64,7 +64,7 @@ export function Operationen({
       </FormControl>
 
       <Button variant="contained" onClick={handleVisualisierung}>
-        <Visualisierung></Visualisierung>
+        Visualisierung
       </Button>
     </div>
   );
