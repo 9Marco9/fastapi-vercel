@@ -63,7 +63,7 @@ export function app() {
       <h1>Wetterdaten Anwendung</h1>
       <Infobalken />
       <Operationen />
-      <Visualiserung />
+      <Visualisierung />
     </div>
   );
 }
