@@ -2,32 +2,23 @@ from fastapi import FastAPI
 import json
 from pathlib import Path
 
-# erstellen FastAPI Instanz
-app = FastAPI(docs_API_url="/api/py/docs_API",
-              openapi_url ="/api/py/openapi.json")
+# Create FastAPI instance
+app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
 # Pfad zur JSON-Datei
-#json_pfad =  Path("src/meteodaten_2023_daily.json")
-
-json_pfad = Path(__file__).parent.parent.parent / "src" / "meteodaten_2023_daily.json"
-
-
+JSON_FILE_PATH = Path("src/meteodaten_2023_daily.json")
 
 @app.get("/api/py/meteodaten")
 def get_meteodaten():
     try:
-        #print("JSON-Pfad:", json_pfad)  # Gibt den berechneten Pfad aus
-        #print("Existiert die Datei?", json_pfad.exists())  # Prüft, ob die Datei existiert
-
-        with open(json_pfad, encoding= "utf-8") as file:
-            daten= json.load(file)
-        return daten
-        
-    except FileNotFoundError: 
-        return{"error":"json Datei konnte nicht gefunden werden. Ursache: falsche Pfad oder Dateiname"}
-    except json.JSONDecodeError: 
-        return{"error":"ungültiges json Format. Bitte überprüfen Sie das Format."}
-
+        # JSON-Datei öffnen und laden
+        with open(JSON_FILE_PATH, encoding="utf-8") as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        return {"error": "JSON file not found. Please check the path and filename."}
+    except json.JSONDecodeError:
+        return {"error": "Invalid JSON format. Please check the file content."}
         
       
 
