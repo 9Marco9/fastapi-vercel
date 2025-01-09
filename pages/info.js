@@ -1,7 +1,7 @@
 export default function Info() {
   return (
     <>
-      <h1>Hallo Info</h1>
+      <h1>test</h1>
     </>
   );
 }
