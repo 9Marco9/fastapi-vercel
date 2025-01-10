@@ -7,7 +7,7 @@ import Infobalken from "./Infobalken.jsx";
 import { Operationen } from "./operationen.jsx";
 import { Visualisierung } from "./Visualisierung.jsx";
 
-const thema = createTheme({
+const theme = createTheme({
   palette: {
     mode: "dark",
   },
