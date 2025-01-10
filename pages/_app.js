@@ -1,69 +1,60 @@
-import React, { useState, useEffect } from "react";
-//import axios from "axios";
-import { VegaLite } from "react-vega";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
-import { Infobalken } from "./Infobalken.jsx";
+import Infobalken from "./Infobalken.jsx";
 import { Operationen } from "./operationen.jsx";
 import { Visualisierung } from "./Visualisierung.jsx";
 
-// Vega-Lite-Spezifikation für das Diagramm
-const spec = {
-  $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  data: {
-    values: [
-      {
-        Datum: 1672531200000,
-        Standortname: "Zürich Rosengartenstrasse",
-        RainDur: 0,
-        T: 12.23,
-        p: 972.02,
-      },
-      {
-        Datum: 1672531200000,
-        Standortname: "Zürich Schimmelstrasse",
-        RainDur: 0,
-        T: 12.18,
-        p: 974.46,
-      },
-    ],
+const thema = createTheme({
+  palette: {
+    mode: "dark",
   },
-  repeat: {
-    layer: ["T", "p"],
-  },
-  spec: {
-    mark: "line",
-    encoding: {
-      x: {
-        field: "Datum",
-        type: "temporal",
-        title: "Datum",
-      },
-      y: {
-        field: { repeat: "layer" },
-        type: "quantitative",
-        title: "Wert",
-      },
-      color: {
-        datum: { repeat: "layer" },
-        type: "nominal",
-        title: "Parameter",
-      },
-      tooltip: [
-        { field: "Standortname", type: "nominal", title: "Standort" },
-        { field: "Datum", type: "temporal", title: "Datum" },
-        { field: { repeat: "layer" }, type: "quantitative", title: "Wert" },
-      ],
-    },
-  },
-};
+});
 
-export function app() {
+function App() {
+  const [data, setData] = useState([]);
+  const [standort, setStandort] = useState("");
+  const [attribut, setAttribut] = useState("T");
+  const [zeitraum, setZeitraum] = useState("Monat");
+  const [gefilterteDaten, setGefilterteDaten] = useState([]);
+
+  // Daten vom Backend laden
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/py/meteodaten")
+      .then((response) => {
+        setData(response.data);
+        setGefilterteDaten(response.data);
+      })
+      .catch((error) => {
+        console.error("Fehler beim Abrufen der Daten:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (standort) {
+      const gefiltert = data.filter((item) => item.Standortname === standort);
+      setGefilterteDaten(gefiltert);
+    }
+  }, [standort, attribut, zeitraum, data]);
+
   return (
-    <div>
-      <h1>Wetterdaten Anwendung</h1>
-      <Infobalken />
-      <Operationen />
-      <Visualisierung />
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div>
+        <Infobalken />
+        <Operationen
+          setStandort={setStandort}
+          setAttribut={setAttribut}
+          setZeitraum={setZeitraum}
+          updateDiagramm={() => {}}
+        />
+        <Visualisierung daten={gefilterteDaten} attribut={attribut} />
+      </div>
+    </ThemeProvider>
   );
 }
+
+export default App;
