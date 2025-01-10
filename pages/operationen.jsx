@@ -1,70 +1,68 @@
-import React, { useState } from "react";
+import React from "react";
 import {
+  MenuItem,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
   Button,
 } from "@mui/material";
 
-export function Operationen({
+export default function Operationen({
   setStandort,
+  standorte,
   setAttribut,
-  setZeitraum,
   updateDiagramm,
 }) {
-  const [lokalStandort, setLokalStandort] = useState("");
-  const [lokalAttribut, setLokalAttribut] = useState("T");
-  const [lokalZeitraum, setLokalZeitraum] = useState("Monat");
+  const [selectedStandort, setSelectedStandort] =
+    React.useState("Alle Standorte");
 
-  const handleVisualisierung = () => {
-    setStandort(lokalStandort);
-    setAttribut(lokalAttribut);
-    setZeitraum(lokalZeitraum);
-    updateDiagramm(updateDiagramm);
+  const handleStandorteChange = (event) => {
+    const value = event.target.value;
+    setSelectedStandort(value);
+    setStandort(value === "Alle Standorte" ? "" : value); // "" für alle Standorte
   };
+
+  const handleAttributChange = (event) => {
+    setAttribut(event.target.value);
+  };
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <FormControl fullWidth>
-        <InputLabel>Standort</InputLabel>
+    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+      <FormControl style={{ minWidth: "200px" }}>
+        <InputLabel id="standorte-label">Standorte</InputLabel>
         <Select
-          value={lokalStandort}
-          onChange={(e) => setLokalStandort(e.target.value)}
+          labelId="standorte-label"
+          value={selectedStandort}
+          onChange={handleStandorteChange}
         >
-          <MenuItem value="Zürich Rosengartenstrasse">
-            Zürich Rosengartenstrasse
-          </MenuItem>
-          <MenuItem value="Zürich Schimmelstrasse">
-            Zürich Schimmelstrasse
-          </MenuItem>
+          <MenuItem value="Alle Standorte">Alle Standorte</MenuItem>
+          {standorte.map((standort) => (
+            <MenuItem key={standort} value={standort}>
+              {standort}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
-      <FormControl fullWidth>
-        <InputLabel>Attribut</InputLabel>
+      <FormControl style={{ minWidth: "200px" }}>
+        <InputLabel id="attribut-label">Attribut</InputLabel>
         <Select
-          value={lokalAttribut}
-          onChange={(e) => setLokalAttribut(e.target.value)}
+          labelId="attribut-label"
+          defaultValue="p"
+          onChange={handleAttributChange}
         >
           <MenuItem value="T">Temperatur (°C)</MenuItem>
           <MenuItem value="RainDur">Regendauer (min)</MenuItem>
-          <MenuItem value="p">Luftdruck (hPa)</MenuItem>
+          <MenuItem value="p">Druck (hPa)</MenuItem>
         </Select>
       </FormControl>
 
-      <FormControl fullWidth>
-        <InputLabel>Zeitraum</InputLabel>
-        <Select
-          value={lokalZeitraum}
-          onChange={(e) => setLokalZeitraum(e.target.value)}
-        >
-          <MenuItem value="Monat">Monat</MenuItem>
-          <MenuItem value="Jahr">Jahr</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button variant="contained" onClick={handleVisualisierung}>
-        Visualisierung
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => updateDiagramm(selectedStandort)}
+      >
+        VISUALISIERUNG
       </Button>
     </div>
   );

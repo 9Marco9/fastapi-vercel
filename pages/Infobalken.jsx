@@ -6,7 +6,7 @@ export default function Infobalken() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-          Standortbasierte Wetteranalyse
+          Standortbasierte Wetterdatenabrage
         </Typography>
       </Toolbar>
     </AppBar>

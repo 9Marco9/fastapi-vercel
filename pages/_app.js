@@ -3,9 +3,9 @@ import axios from "axios";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import Infobalken from "./Infobalken.jsx";
-import { Operationen } from "./operationen.jsx";
-import { Visualisierung } from "./Visualisierung.jsx";
+import Infobalken from "./Infobalken";
+import Operationen from "./operationen";
+import Visualisierung from "./Visualisierung";
 
 const theme = createTheme({
   palette: {
@@ -13,48 +13,67 @@ const theme = createTheme({
   },
 });
 
-function App() {
-  const [data, setData] = useState([]);
-  const [standort, setStandort] = useState("");
-  const [attribut, setAttribut] = useState("T");
-  const [zeitraum, setZeitraum] = useState("Monat");
+export default function App() {
+  const [daten, setDaten] = useState([]);
   const [gefilterteDaten, setGefilterteDaten] = useState([]);
+  const [ausgewaehlterStandort, setAusgewaehlterStandort] =
+    useState("Alle Standorte");
+  const [attribut, setAttribut] = useState("p");
+  const [anzeigen, setAnzeigen] = useState(false); // Zustand für Visualisierung
 
-  // Daten vom Backend laden
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/api/py/meteodaten")
-      .then((response) => {
-        setData(response.data);
-        setGefilterteDaten(response.data);
-      })
-      .catch((error) => {
-        console.error("Fehler beim Abrufen der Daten:", error);
-      });
+      .then((response) => setDaten(response.data))
+      .catch((error) => console.error("Fehler beim Abrufen der Daten:", error));
   }, []);
 
-  useEffect(() => {
-    if (standort) {
-      const gefiltert = data.filter((item) => item.Standortname === standort);
-      setGefilterteDaten(gefiltert);
+  const handleVisualisierung = () => {
+    let gefiltert;
+    if (ausgewaehlterStandort === "Alle Standorte") {
+      // Alle Standorte auswählen
+      gefiltert = daten.filter(
+        (item) => item[attribut] !== undefined && item[attribut] !== null
+      );
+    } else {
+      // Spezifischen Standort filtern
+      gefiltert = daten.filter(
+        (item) =>
+          item.Standortname === ausgewaehlterStandort &&
+          item[attribut] !== undefined &&
+          item[attribut] !== null
+      );
     }
-  }, [standort, attribut, zeitraum, data]);
+    setGefilterteDaten(gefiltert);
+    setAnzeigen(true); // Visualisierung anzeigen
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div>
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
         <Infobalken />
-        <Operationen
-          setStandort={setStandort}
-          setAttribut={setAttribut}
-          setZeitraum={setZeitraum}
-          updateDiagramm={() => {}}
-        />
-        <Visualisierung daten={gefilterteDaten} attribut={attribut} />
+        <div style={{ flex: "0 0 auto", padding: "1rem" }}>
+          <Operationen
+            setStandort={setAusgewaehlterStandort}
+            standorte={[
+              "Alle Standorte", // Option für alle Standorte
+              "Zürich Rosengartenstrasse",
+              "Zürich Schimmelstrasse",
+              "Zürich Stampfenbachstrasse",
+            ]}
+            setAttribut={setAttribut}
+            updateDiagramm={handleVisualisierung}
+          />
+        </div>
+        {anzeigen && (
+          <div style={{ flex: "1 1 auto", overflow: "auto", padding: "1rem" }}>
+            <Visualisierung daten={gefilterteDaten} attribut={attribut} />
+          </div>
+        )}
       </div>
     </ThemeProvider>
   );
 }
-
-export default App;
