@@ -21,7 +21,7 @@ export function Operationen({
     setStandort(lokalStandort);
     setAttribut(lokalAttribut);
     setZeitraum(lokalZeitraum);
-    updateDiagramm();
+    updateDiagramm(updateDiagramm);
   };
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
