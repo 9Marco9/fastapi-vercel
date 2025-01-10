@@ -44,6 +44,8 @@ export default function App() {
           item[attribut] !== null
       );
     }
+    console.log("Gefilterte Daten:", gefiltert); // Debugging: Prüfe die gefilterten Daten
+    // Wichtig: Sicherstellen, dass der Zustand aktualisiert wird
     setGefilterteDaten(gefiltert);
     setAnzeigen(true); // Visualisierung anzeigen
   };
@@ -70,7 +72,11 @@ export default function App() {
         </div>
         {anzeigen && ( // Visualisierung nur anzeigen, wenn anzeigen = true
           <div style={{ flex: "1 1 auto", overflow: "auto", padding: "1rem" }}>
-            <Visualisierung daten={gefilterteDaten} attribut={attribut} />
+            <Visualisierung
+              daten={gefilterteDaten}
+              attribut={attribut}
+              ausgewaehlterStandort={ausgewaehlterStandort}
+            />
           </div>
         )}
       </div>
