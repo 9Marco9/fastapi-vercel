@@ -19,11 +19,11 @@ export default function App() {
   const [ausgewaehlterStandort, setAusgewaehlterStandort] =
     useState("Alle Standorte");
   const [attribut, setAttribut] = useState("p");
-  const [anzeigen, setAnzeigen] = useState(false); // Zustand für Visualisierung
+  const [anzeigen, setAnzeigen] = useState(false); // Visualisierung erst nach Klick anzeigen
 
   useEffect(() => {
     axios
-      .get("https://pp-marcos-projects-297a31d7.vercel.app/")
+      .get("http://127.0.0.1:8000/api/py/meteodaten")
       .then((response) => setDaten(response.data))
       .catch((error) => console.error("Fehler beim Abrufen der Daten:", error));
   }, []);
@@ -31,12 +31,12 @@ export default function App() {
   const handleVisualisierung = () => {
     let gefiltert;
     if (ausgewaehlterStandort === "Alle Standorte") {
-      // Alle Standorte auswählen
+      // Alle Daten anzeigen
       gefiltert = daten.filter(
         (item) => item[attribut] !== undefined && item[attribut] !== null
       );
     } else {
-      // Spezifischen Standort filtern
+      // Nur den ausgewählten Standort filtern
       gefiltert = daten.filter(
         (item) =>
           item.Standortname === ausgewaehlterStandort &&
@@ -68,7 +68,7 @@ export default function App() {
             updateDiagramm={handleVisualisierung}
           />
         </div>
-        {anzeigen && (
+        {anzeigen && ( // Visualisierung nur anzeigen, wenn anzeigen = true
           <div style={{ flex: "1 1 auto", overflow: "auto", padding: "1rem" }}>
             <Visualisierung daten={gefilterteDaten} attribut={attribut} />
           </div>

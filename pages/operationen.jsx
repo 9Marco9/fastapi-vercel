@@ -35,7 +35,6 @@ export default function Operationen({
           value={selectedStandort}
           onChange={handleStandorteChange}
         >
-          <MenuItem value="Alle Standorte">Alle Standorte</MenuItem>
           {standorte.map((standort) => (
             <MenuItem key={standort} value={standort}>
               {standort}
