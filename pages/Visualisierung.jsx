@@ -39,6 +39,7 @@ export default function Visualisierung({
             axis: {
               labelFontSize: 14,
               titleFontSize: 16,
+              format: "%b",
             },
           },
           y: {
