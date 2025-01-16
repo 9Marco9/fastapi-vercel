@@ -47,7 +47,7 @@ export default function Operationen({
           <Select
             labelId="standorte-label"
             value={selectedStandort}
-            onChange={(e) => setStandort(e.target.value)}
+            onChange={handleStandorteChange}
           >
             {standorte.map((standort) => (
               <MenuItem key={standort} value={standort}>
@@ -62,7 +62,7 @@ export default function Operationen({
           <Select
             labelId="attribut-label"
             defaultValue="p"
-            onChange={(e) => setAttribut(e.target.value)}
+            onChange={handleAttributChange}
           >
             <MenuItem value="T">Temperatur (°C)</MenuItem>
             <MenuItem value="RainDur">Regendauer (min)</MenuItem>
