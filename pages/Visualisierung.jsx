@@ -8,8 +8,8 @@ export default function Visualisierung({
 }) {
   const spec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-    width: 1400, // Breiter als vorher
-    height: 700, // Höher als vorher
+    width: 1600,
+    height: 800,
     layer: [
       {
         data: {
@@ -22,7 +22,8 @@ export default function Visualisierung({
             type: "temporal",
             title: "Datum (Monatlich Gruppiert)",
             axis: {
-              format: "%b",
+              labelFontSize: 14,
+              titleFontSize: 16,
             },
           },
           y: {
@@ -36,6 +37,10 @@ export default function Visualisierung({
                 : attribut === "RainDur"
                 ? "Regendauer (min)"
                 : "Wert",
+            axis: {
+              labelFontSize: 14,
+              titleFontSize: 16,
+            },
           },
           color: {
             field: "Standortname",
@@ -44,14 +49,21 @@ export default function Visualisierung({
             scale: {
               range:
                 ausgewaehlterStandort === "Alle Standorte"
-                  ? ["#1F77B4", "#FF7F0E", "#2CA02C"] // Farben für Standorte (Alle Standorte)
+                  ? ["#1F77B4", "#FF7F0E", "#2CA02C"]
                   : attribut === "p"
-                  ? ["#4E79A7", "#A0CBE8", "#1F77B4"] // Blau-Töne für Druck
+                  ? ["#59A14F", "#8CD17D", "#2CA02C"]
                   : attribut === "T"
-                  ? ["#E15759", "#FF9D9A", "#D62728"] // Rot-Töne für Temperatur
+                  ? ["#E15759", "#FF9D9A", "#D62728"]
                   : attribut === "RainDur"
-                  ? ["#59A14F", "#8CD17D", "#2CA02C"] // Grün-Töne für Regen
-                  : ["#AAAAAA"], // Standardfarbe
+                  ? ["#4E79A7", "#A0CBE8", "#1F77B4"]
+                  : ["#AAAAAA"],
+            },
+            legend: {
+              titleFontSize: 16,
+              labelFontSize: 14,
+              labelLimit: 200,
+              labelAlign: "left",
+              labelBaseline: "middle",
             },
           },
           tooltip: [
@@ -62,21 +74,17 @@ export default function Visualisierung({
         },
       },
       {
-        data: {
-          values: [
-            { Hinweis: "Hinweis: Alle Daten stammen aus dem Jahr 2023" },
-          ],
-        },
+        data: {},
         mark: {
           type: "text",
           align: "left",
           baseline: "top",
-          dx: 1000, // Verschiebung nach rechts
-          dy: -320, // Position unterhalb der Legende
+          dx: 0,
+          dy: 20,
         },
         encoding: {
           text: { field: "Hinweis", type: "nominal" },
-          color: { value: "black" }, // Schwarzer Text für den Hinweis
+          color: { value: "black" },
         },
       },
     ],
@@ -87,7 +95,7 @@ export default function Visualisierung({
       style={{
         width: "100%",
         display: "flex",
-        justifyContent: "flex-start",
+        justifyContent: "left",
         padding: "1rem",
       }}
     >

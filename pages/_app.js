@@ -19,24 +19,28 @@ export default function App() {
   const [ausgewaehlterStandort, setAusgewaehlterStandort] =
     useState("Alle Standorte");
   const [attribut, setAttribut] = useState("p");
-  const [anzeigen, setAnzeigen] = useState(false); // Visualisierung erst nach Klick anzeigen
+  const [anzeigen, setAnzeigen] = useState(false);
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/api/py/meteodaten")
-      .then((response) => setDaten(response.data))
+      .then((response) => {
+        console.log("Daten von der API:", response.data);
+        setDaten(response.data);
+      })
       .catch((error) => console.error("Fehler beim Abrufen der Daten:", error));
   }, []);
 
   const handleVisualisierung = () => {
+    console.log("Aktueller Standort:", ausgewaehlterStandort);
+    console.log("Attribut:", attribut);
+
     let gefiltert;
     if (ausgewaehlterStandort === "Alle Standorte") {
-      // Alle Daten anzeigen
       gefiltert = daten.filter(
         (item) => item[attribut] !== undefined && item[attribut] !== null
       );
     } else {
-      // Nur den ausgewählten Standort filtern
       gefiltert = daten.filter(
         (item) =>
           item.Standortname === ausgewaehlterStandort &&
@@ -44,10 +48,10 @@ export default function App() {
           item[attribut] !== null
       );
     }
-    console.log("Gefilterte Daten:", gefiltert); // Debugging: Prüfe die gefilterten Daten
-    // Wichtig: Sicherstellen, dass der Zustand aktualisiert wird
-    setGefilterteDaten(gefiltert);
-    setAnzeigen(true); // Visualisierung anzeigen
+
+    console.log("Gefilterte Daten:", gefiltert);
+    setGefilterteDaten([...gefiltert]);
+    setAnzeigen(true);
   };
 
   return (
@@ -61,7 +65,7 @@ export default function App() {
           <Operationen
             setStandort={setAusgewaehlterStandort}
             standorte={[
-              "Alle Standorte", // Option für alle Standorte
+              "Alle Standorte",
               "Zürich Rosengartenstrasse",
               "Zürich Schimmelstrasse",
               "Zürich Stampfenbachstrasse",
@@ -70,13 +74,26 @@ export default function App() {
             updateDiagramm={handleVisualisierung}
           />
         </div>
-        {anzeigen && ( // Visualisierung nur anzeigen, wenn anzeigen = true
+        {gefilterteDaten.length > 0 && (
           <div style={{ flex: "1 1 auto", overflow: "auto", padding: "1rem" }}>
             <Visualisierung
               daten={gefilterteDaten}
               attribut={attribut}
               ausgewaehlterStandort={ausgewaehlterStandort}
             />
+            {anzeigen && (
+              <div
+                style={{
+                  marginTop: "1rem",
+                  textAlign: "left",
+                  fontSize: "14px",
+                  color: "white",
+                }}
+              >
+                <p>Hinweis: Alle Daten stammen aus dem Jahr 2023</p>
+                <p>Datenquelle:opendata.swiss</p>
+              </div>
+            )}
           </div>
         )}
       </div>
