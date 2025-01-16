@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from pathlib import Path
+from fastapi.responses import JSONResponse
 
 # Create FastAPI instance
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
@@ -26,6 +27,7 @@ def get_meteodaten():
             data = json.load(file)
         return data
     except FileNotFoundError:
-        return {"error": "JSON file not found. Please check the path and filename."}
+        return JSONResponse({"error": "JSON file nicht gefunden. Bitte überprüfe das Format und den Pfad."}, status_code=404)
     except json.JSONDecodeError:
-        return {"error": "Invalid JSON format. Please check the file content."}
+        return JSONResponse({"error": "Ungultiges JSON file. Bitte überprüfe den Inhalt der Datei."}, status_code=400)
+

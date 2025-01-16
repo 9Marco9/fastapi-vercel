@@ -6,6 +6,14 @@ export default function Visualisierung({
   attribut,
   ausgewaehlterStandort,
 }) {
+  const farbskala = {
+    Alle: ["#1F77B4", "#FF7F0E", "#2CA02C"],
+    Druck: ["#59A14F", "#8CD17D", "#2CA02C"],
+    Temperatur: ["#E15759", "#FF9D9A", "#D62728"],
+    Regen: ["#4E79A7", "#A0CBE8", "#1F77B4"],
+    Default: ["#AAAAAA"],
+  };
+
   const spec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     width: 1600,
@@ -15,7 +23,14 @@ export default function Visualisierung({
         data: {
           values: daten,
         },
-        mark: "line",
+        mark: {
+          type: "line",
+          point: {
+            size: 20,
+            filled: true,
+          },
+          tooltip: true,
+        },
         encoding: {
           x: {
             field: "Datum",
@@ -41,6 +56,7 @@ export default function Visualisierung({
               labelFontSize: 14,
               titleFontSize: 16,
             },
+            scale: attribut === "p" ? { domain: [900, 1000] } : undefined,
           },
           color: {
             field: "Standortname",
@@ -49,14 +65,14 @@ export default function Visualisierung({
             scale: {
               range:
                 ausgewaehlterStandort === "Alle Standorte"
-                  ? ["#1F77B4", "#FF7F0E", "#2CA02C"]
+                  ? farbskala.Alle
                   : attribut === "p"
-                  ? ["#59A14F", "#8CD17D", "#2CA02C"]
+                  ? farbskala.Druck
                   : attribut === "T"
-                  ? ["#E15759", "#FF9D9A", "#D62728"]
+                  ? farbskala.Temperatur
                   : attribut === "RainDur"
-                  ? ["#4E79A7", "#A0CBE8", "#1F77B4"]
-                  : ["#AAAAAA"],
+                  ? farbskala.Regen
+                  : farbskala.Default,
             },
             legend: {
               titleFontSize: 16,
