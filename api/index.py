@@ -4,25 +4,25 @@ import json
 from pathlib import Path
 from fastapi.responses import JSONResponse
 
-# Create FastAPI instance
+
 app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
-# CORS-Konfiguration hinzufügen
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Erlaubt Anfragen von allen Quellen (für Entwicklung geeignet)
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],  # Erlaubt alle HTTP-Methoden
-    allow_headers=["*"],  # Erlaubt alle Header
+    allow_methods=["*"],  
+    allow_headers=["*"],  
 )
 
-# Pfad zur JSON-Datei
+
 json_path = Path(__file__).parent / "meteodaten_2023_daily.json"
 
 @app.get("/api/py/meteodaten")
 def get_meteodaten():
     try:
-        # JSON-Datei öffnen und laden
+        
         with open(json_path, encoding="utf-8") as file:
             data = json.load(file)
         return data
