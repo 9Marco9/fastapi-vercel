@@ -91,7 +91,7 @@ export default function App() {
                 }}
               >
                 <p>Hinweis: Alle Daten stammen aus dem Jahr 2023</p>
-                <p>Datenquelle:opendata.swiss</p>
+                <p>Datenquelle: opendata.swiss</p>
               </div>
             )}
           </div>
