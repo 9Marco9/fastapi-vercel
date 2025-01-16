@@ -23,9 +23,7 @@ export default function App() {
 
   useEffect(() => {
     axios
-      .get(
-        "https://pp-qurlqee8h-marcos-projects-297a31d7.vercel.app/api/py/meteodaten"
-      )
+      .get("https://fastapi-vercel-six-omega.vercel.app/api/py/meteodaten")
       .then((response) => {
         console.log("Daten von der API:", response.data);
         setDaten(response.data);
