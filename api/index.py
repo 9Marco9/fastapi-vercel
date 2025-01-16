@@ -10,7 +10,7 @@ app = FastAPI(docs_url="/api/py/docs", openapi_url="/api/py/openapi.json")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["https://pp-marcos-projects-297a31d7.vercel.app"], 
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],  
